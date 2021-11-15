@@ -1,5 +1,5 @@
 let p = new Promise(function (resolve, reject) {
-   let test = false;
+   let test = true;
 
    if (test) {
       resolve('Its going to be fine!');
