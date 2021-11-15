@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 	entry: ['@babel/polyfill', './src/index.js'],// irá empacotar em um único arquivo!!
@@ -6,32 +7,41 @@ module.exports = {
 		path: path.resolve(__dirname, 'dist'),
 		filename: 'bundle.js'
 	},
+	plugins: [
+		new MiniCssExtractPlugin({
+			filename: "index.css"
+		})
+	],
 	module: {
 		rules: [
+			{
+				test: /\.css$/i,
+				use: [
+					{loader: MiniCssExtractPlugin.loader }, // style-loader
+					{loader: "css-loader"}
+				]
+			},
 			{
 				test: /\.js$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader'
 			},
-			{
+			/* {
 				test: /\.css$/,
 				use: [
 					{ loader: "style-loader"},
 					{ loader: "css-loader"}
 				],
-			},
+			}, */
 			{
 				test: /\.(scss)$/,
 				use: [
 					{
-						//inject CSS to page
-						loader: 'style-loader'
+						loader: MiniCssExtractPlugin.loader //inject CSS to page 'style-loader'
 					}, {
-						// translates CSS into CommonJS modules
-						loader: 'css-loader'
+						loader: 'css-loader' // translates CSS into CommonJS modules
 					}, {
-						// Run postcss actions
-						loader: 'postcss-loader',
+						loader: 'postcss-loader', // Run postcss actions
 						options: {
 							// `postcssOptions` is needed for postcss 8.x;
       					// if you use postcss 7.x skip the key
@@ -45,8 +55,7 @@ module.exports = {
 							}
 						}
 					}, {
-						// compiles Sass to CSS
-						loader: 'sass-loader'
+						loader: 'sass-loader' // compiles Sass to CSS
 					}
 				]
 			}
