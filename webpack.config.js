@@ -3,11 +3,20 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+/* entry: ['@babel/polyfill', './src/index.js'],// TODO:irá empacotar em um único arquivo!!
+output: {
+	path: path.resolve(__dirname, 'dist'),
+	filename: 'bundle.js'
+}, */
+
 module.exports = {
-	entry: ['@babel/polyfill', './src/index.js'],// TODO:irá empacotar em um único arquivo!!
+	entry: {
+		babelPolyfill: '@babel/polyfill',
+		index: './src/index.js'
+	},// TODO:irá empacotar em um único arquivo!!
 	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
+		path: path.resolve(__dirname, 'dist/bundle'),
+		filename: '[name].bundle.js'
 	},
 	plugins: [
 		new MiniCssExtractPlugin({
@@ -15,6 +24,9 @@ module.exports = {
 		})
 	],
 	optimization: {
+		splitChunks: {
+			chunks: 'all'
+		},
 		minimizer: [
 			new UglifyJsPlugin({
 				uglifyOptions: {
